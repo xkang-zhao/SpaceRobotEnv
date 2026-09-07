@@ -1,0 +1,31 @@
+<!-- Add these mesh assets inside <asset> -->
+<mesh name="satellite_3_col_000" file="satellite_3/collision_parts/satellite_3_col_000.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_001" file="satellite_3/collision_parts/satellite_3_col_001.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_002" file="satellite_3/collision_parts/satellite_3_col_002.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_003" file="satellite_3/collision_parts/satellite_3_col_003.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_004" file="satellite_3/collision_parts/satellite_3_col_004.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_005" file="satellite_3/collision_parts/satellite_3_col_005.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_006" file="satellite_3/collision_parts/satellite_3_col_006.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_007" file="satellite_3/collision_parts/satellite_3_col_007.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_008" file="satellite_3/collision_parts/satellite_3_col_008.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_009" file="satellite_3/collision_parts/satellite_3_col_009.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_010" file="satellite_3/collision_parts/satellite_3_col_010.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_011" file="satellite_3/collision_parts/satellite_3_col_011.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_012" file="satellite_3/collision_parts/satellite_3_col_012.stl" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_3_col_013" file="satellite_3/collision_parts/satellite_3_col_013.stl" scale="0.001 0.001 0.001"/>
+
+<!-- Add these collision geoms inside the same body as the visual mesh -->
+<geom name="satellite_3_col_geom_000" type="mesh" mesh="satellite_3_col_000" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_001" type="mesh" mesh="satellite_3_col_001" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_002" type="mesh" mesh="satellite_3_col_002" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_003" type="mesh" mesh="satellite_3_col_003" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_004" type="mesh" mesh="satellite_3_col_004" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_005" type="mesh" mesh="satellite_3_col_005" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_006" type="mesh" mesh="satellite_3_col_006" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_007" type="mesh" mesh="satellite_3_col_007" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_008" type="mesh" mesh="satellite_3_col_008" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_009" type="mesh" mesh="satellite_3_col_009" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_010" type="mesh" mesh="satellite_3_col_010" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_011" type="mesh" mesh="satellite_3_col_011" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_012" type="mesh" mesh="satellite_3_col_012" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_3_col_geom_013" type="mesh" mesh="satellite_3_col_013" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>

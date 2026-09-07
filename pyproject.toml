@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "my_mujoco_spacerobot"
+version = "0.2.0"
+description = "MuJoCo spacerobot simulation package"
+requires-python = ">=3.8"
+
+[tool.setuptools.packages.find]
+where = ["src"]

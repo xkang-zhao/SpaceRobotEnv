@@ -1,0 +1,19 @@
+<!-- Add these mesh assets inside <asset> -->
+<mesh name="satellite_2_col_000" file="satellite_2/collision_parts/satellite_2_col_000.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_001" file="satellite_2/collision_parts/satellite_2_col_001.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_002" file="satellite_2/collision_parts/satellite_2_col_002.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_003" file="satellite_2/collision_parts/satellite_2_col_003.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_004" file="satellite_2/collision_parts/satellite_2_col_004.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_005" file="satellite_2/collision_parts/satellite_2_col_005.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_006" file="satellite_2/collision_parts/satellite_2_col_006.obj" scale="0.001 0.001 0.001"/>
+<mesh name="satellite_2_col_007" file="satellite_2/collision_parts/satellite_2_col_007.obj" scale="0.001 0.001 0.001"/>
+
+<!-- Add these collision geoms inside body name="cube" -->
+<geom name="satellite_2_col_geom_000" type="mesh" mesh="satellite_2_col_000" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_001" type="mesh" mesh="satellite_2_col_001" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_002" type="mesh" mesh="satellite_2_col_002" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_003" type="mesh" mesh="satellite_2_col_003" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_004" type="mesh" mesh="satellite_2_col_004" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_005" type="mesh" mesh="satellite_2_col_005" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_006" type="mesh" mesh="satellite_2_col_006" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="satellite_2_col_geom_007" type="mesh" mesh="satellite_2_col_007" euler="0 0 -1.57" group="3" rgba="1 0.2 0.1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>

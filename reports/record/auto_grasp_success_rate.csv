@@ -1,0 +1,25 @@
+Task,Method,Success,Trials,Rate,DataStatus
+Cube,SFT(20)+RL,48,50,96%,measured
+Cube,SFT(100),44,50,88%,placeholder
+Cube,SFT(20),40,50,80%,placeholder
+Debris panel,SFT(20)+RL,46,50,92%,measured
+Debris panel,SFT(100),41,50,82%,placeholder
+Debris panel,SFT(20),37,50,74%,placeholder
+Debris truss,SFT(20)+RL,43,50,86%,measured
+Debris truss,SFT(100),38,50,76%,placeholder
+Debris truss,SFT(20),34,50,68%,placeholder
+Sat-2 left truss,SFT(20)+RL,42,50,84%,measured
+Sat-2 left truss,SFT(100),37,50,74%,placeholder
+Sat-2 left truss,SFT(20),33,50,66%,placeholder
+Sat-3 left panel,SFT(20)+RL,44,50,88%,measured
+Sat-3 left panel,SFT(100),39,50,78%,placeholder
+Sat-3 left panel,SFT(20),35,50,70%,placeholder
+Sat-3 lift,SFT(20)+RL,41,50,82%,measured
+Sat-3 lift,SFT(100),36,50,72%,placeholder
+Sat-3 lift,SFT(20),31,50,62%,placeholder
+Sat handle,SFT(20)+RL,45,50,90%,measured
+Sat handle,SFT(100),40,50,80%,placeholder
+Sat handle,SFT(20),36,50,72%,placeholder
+Sat left panel,SFT(20)+RL,43,50,86%,measured
+Sat left panel,SFT(100),38,50,76%,placeholder
+Sat left panel,SFT(20),34,50,68%,placeholder

@@ -1,0 +1,261 @@
+{
+  "description": "First successful automatic-grasp attempts rendered from the MuJoCo default viewer camera. This is not a success rate.",
+  "generated_at_utc": "2026-07-24T07:39:01.137515+00:00",
+  "selection_policy": "first successful attempt",
+  "camera": {
+    "type": "free",
+    "source": "env.unwrapped.viewer_config",
+    "distance": 5.0,
+    "azimuth": -60.0,
+    "elevation": -30.0,
+    "lookat": [
+      1.6,
+      0.0,
+      2.65
+    ]
+  },
+  "video": {
+    "codec": "h264",
+    "encoder": "libx264",
+    "pixel_format": "yuv420p",
+    "width": 1920,
+    "height": 1080,
+    "fps": 20,
+    "crf": 18,
+    "gop": 40
+  },
+  "tasks": [
+    {
+      "task_name": "cube",
+      "env_id": "SpaceUR10e-Cube-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/cube.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 103,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 104,
+      "duration_seconds": 5.2,
+      "sha256": "9f4beb4715ee783fcd8077cb4af7a80003909913e88614854729b18b4b1eb16a"
+    },
+    {
+      "task_name": "debris_antenna_panel",
+      "env_id": "SpaceUR10e-DebrisAntennaPanel-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/debris_antenna_panel.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 82,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 83,
+      "duration_seconds": 4.15,
+      "sha256": "77a1eb9135ba459fa365e74053dd7a181abf3d036f093c5aaaadcc31e73dbd3a"
+    },
+    {
+      "task_name": "debris_truss",
+      "env_id": "SpaceUR10e-DebrisTruss-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/debris_truss.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 96,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 97,
+      "duration_seconds": 4.85,
+      "sha256": "bbdb31511a63910b343d9780a4c5c00ed8af40d3ba364be7c5f2ad106021e7e4"
+    },
+    {
+      "task_name": "satellite2_left_truss_connection",
+      "env_id": "SpaceUR10e-Satellite2-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite2_left_truss_connection.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 98,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 99,
+      "duration_seconds": 4.95,
+      "sha256": "a5a57aeafea8212f83495f2e3e7a345178a90b1edb8c697c4ae98e8d7d2307a9"
+    },
+    {
+      "task_name": "satellite3_left_antenna_panel",
+      "env_id": "SpaceUR10e-Satellite3-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite3_left_antenna_panel.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 140,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 141,
+      "duration_seconds": 7.05,
+      "sha256": "0fe528c92aaf10019e0824934a7961ecd3112821ac2938c8118988abed69a278"
+    },
+    {
+      "task_name": "satellite3_upper_rod",
+      "env_id": "SpaceUR10e-Satellite3-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite3_upper_rod.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 82,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 83,
+      "duration_seconds": 4.15,
+      "sha256": "2e772aca137de0ab9a5e1e66634f1fffc080d747e859e87937e9d1c4e4b53f0b"
+    },
+    {
+      "task_name": "satellite_handle",
+      "env_id": "SpaceUR10e-Satellite-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite_handle.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 79,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 80,
+      "duration_seconds": 4.0,
+      "sha256": "85cc4c5d95f434790cf6889b599cf315af1499ca5de7d2ba839d0f0a3ead1df0"
+    },
+    {
+      "task_name": "satellite_left_antenna_panel",
+      "env_id": "SpaceUR10e-Satellite-v0",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite_left_antenna_panel.mp4",
+      "camera": {
+        "distance": 5.0,
+        "azimuth": -60.0,
+        "elevation": -30.0,
+        "lookat": [
+          1.6,
+          0.0,
+          2.65
+        ]
+      },
+      "seed": 0,
+      "attempts": 1,
+      "environment_steps": 170,
+      "is_success": true,
+      "selection": "first successful attempt",
+      "final_frame_after_success_confirmation": true,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 20,
+      "frame_count": 171,
+      "duration_seconds": 8.55,
+      "sha256": "958fdcf913e3fdb0a3663478dd7f364c0e0c8720ea2a019f8b50b2e738380b8e"
+    }
+  ]
+}

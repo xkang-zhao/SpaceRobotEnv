@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: my_mujoco_spacerobot
+Version: 0.2.0
+Summary: MuJoCo spacerobot simulation package
+Requires-Python: >=3.8

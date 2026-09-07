@@ -1,0 +1,9 @@
+<!-- Add these mesh assets inside <asset> -->
+<mesh name="debris_truss_col_000" file="debris_truss/collision_parts/debris_truss_col_000.stl" scale="0.0033 0.003 0.003"/>
+<mesh name="debris_truss_col_001" file="debris_truss/collision_parts/debris_truss_col_001.stl" scale="0.0033 0.003 0.003"/>
+<mesh name="debris_truss_col_002" file="debris_truss/collision_parts/debris_truss_col_002.stl" scale="0.0033 0.003 0.003"/>
+
+<!-- Add these collision geoms inside the same body as the visual mesh -->
+<geom name="debris_truss_col_geom_000" type="mesh" mesh="debris_truss_col_000" euler="0.95993109 0 -1.57" group="3" rgba="0.6 0.85 1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="debris_truss_col_geom_001" type="mesh" mesh="debris_truss_col_001" euler="0.95993109 0 -1.57" group="3" rgba="0.6 0.85 1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>
+<geom name="debris_truss_col_geom_002" type="mesh" mesh="debris_truss_col_002" euler="0.95993109 0 -1.57" group="3" rgba="0.6 0.85 1 0.25" friction="1.5 0.5 0.005" contype="1" conaffinity="1"/>

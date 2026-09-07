@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create MuJoCo Auto-Grasp Task"
+  short_description: "Register calibrated auto-grasp tasks"
+  default_prompt: "Use $create-mujoco-autograb-script to add an auto-grasp task from this calibration result."

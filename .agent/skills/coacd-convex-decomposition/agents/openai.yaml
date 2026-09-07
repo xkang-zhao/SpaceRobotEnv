@@ -1,0 +1,4 @@
+interface:
+  display_name: "CoACD Convex Decomposition"
+  short_description: "Create MuJoCo collision hulls from meshes"
+  default_prompt: "Use $coacd-convex-decomposition to decompose this mesh into MuJoCo collision geoms."

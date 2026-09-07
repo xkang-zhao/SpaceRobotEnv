@@ -1,0 +1,117 @@
+{
+  "description": "PowerPoint-friendly looping GIFs converted from the MuJoCo automatic-grasp videos.",
+  "conversion": {
+    "width": 960,
+    "fps": 10,
+    "colors": 128,
+    "scaler": "lanczos",
+    "dither": "sierra2_4a",
+    "loop": "continuous"
+  },
+  "tasks": [
+    {
+      "task_name": "cube",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/cube.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/cube.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 52,
+      "duration_seconds": 5.2,
+      "loop": "continuous",
+      "file_size_bytes": 1815574,
+      "sha256": "21ed9695dca1335eb8ec6d05a7c95eee41411a2a161b280eaf1146a760c13cb9"
+    },
+    {
+      "task_name": "debris_antenna_panel",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/debris_antenna_panel.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/debris_antenna_panel.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 42,
+      "duration_seconds": 4.2,
+      "loop": "continuous",
+      "file_size_bytes": 257150,
+      "sha256": "16ad27f3ec82488403ebd5cdead176b08b39e7cf303325612a9a1a149844fa88"
+    },
+    {
+      "task_name": "debris_truss",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/debris_truss.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/debris_truss.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 49,
+      "duration_seconds": 4.9,
+      "loop": "continuous",
+      "file_size_bytes": 302106,
+      "sha256": "d9f1578df127e3d62b024d032b61fd1ff1c7f5f67c7972dfb2e7272bebb3f12f"
+    },
+    {
+      "task_name": "satellite2_left_truss_connection",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite2_left_truss_connection.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/satellite2_left_truss_connection.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 50,
+      "duration_seconds": 5.0,
+      "loop": "continuous",
+      "file_size_bytes": 564572,
+      "sha256": "c6114aa5a1c5d617ea140d049b012d10099358ecda0093e0997c70d7ccadbb45"
+    },
+    {
+      "task_name": "satellite3_left_antenna_panel",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite3_left_antenna_panel.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/satellite3_left_antenna_panel.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 71,
+      "duration_seconds": 7.1,
+      "loop": "continuous",
+      "file_size_bytes": 948057,
+      "sha256": "b334f97225d517be1b1eceb0f36609535bd8d1bc49f9f81fd81491e475ad420e"
+    },
+    {
+      "task_name": "satellite3_upper_rod",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite3_upper_rod.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/satellite3_upper_rod.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 42,
+      "duration_seconds": 4.2,
+      "loop": "continuous",
+      "file_size_bytes": 560076,
+      "sha256": "ecc43c2c3d769d8df9d9a4158cfc4305c68b75f03707abff9f4ff0b9d088a7ea"
+    },
+    {
+      "task_name": "satellite_handle",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite_handle.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/satellite_handle.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 40,
+      "duration_seconds": 4.0,
+      "loop": "continuous",
+      "file_size_bytes": 309769,
+      "sha256": "a29de7f2b196409182e1eae2fccb79c52301c610a03fbbf81a5fccbd83ebcd2b"
+    },
+    {
+      "task_name": "satellite_left_antenna_panel",
+      "source": "/Users/xkang/Documents/my_code/my_simulation/assets/videos/auto_grasp/satellite_left_antenna_panel.mp4",
+      "output": "/Users/xkang/Documents/my_code/my_simulation/assets/gifs/auto_grasp/satellite_left_antenna_panel.gif",
+      "width": 960,
+      "height": 540,
+      "fps": 10,
+      "frame_count": 86,
+      "duration_seconds": 8.6,
+      "loop": "continuous",
+      "file_size_bytes": 851203,
+      "sha256": "214a7283fcd66597a2d7e11158616e5673e157c0f226551f2502fb5712c33e8b"
+    }
+  ]
+}

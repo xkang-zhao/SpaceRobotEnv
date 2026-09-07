@@ -1,0 +1,87 @@
+<mujoco model="ur10e scene">
+  <!-- <option integrator="RK4"/> -->
+  <!-- <option timestep="0.001"          
+        integrator="implicitfast"
+        solver="Newton"            
+        iterations="200"           
+        tolerance="1e-8"/>          提高收敛精度 -->
+  <!-- <option timestep="0.0005" integrator="RK4" gravity="0 0 0"/>    -->
+  <option timestep="0.0005" integrator="implicitfast" gravity="0 0 0"/>  
+
+  <include file="dual_space_ur10e_2f85.xml"/>
+
+  <statistic center="0.4 0 0.4" extent="1"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
+    <!-- <headlight diffuse="0 0 0" ambient="0 0 0" specular="0 0 0"/> -->
+    <rgba haze="0 0 0 1"/>
+    <!-- <global azimuth="120" elevation="-20"/> -->
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0 0 0" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+
+    <mesh file="satellite/body-2.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/hand-2.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_left_1-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_left_2-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_left_3-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_right_1-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_right_2-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_right_3-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_up_1-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_up_2-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_up_3-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_up_4-1.STL" scale="0.8 0.8 0.8"/>
+    <mesh file="satellite/sat_up_5-1.STL" scale="0.8 0.8 0.8"/>
+  </asset>
+
+  <worldbody>
+    <!-- <light pos="0 0 1.5" dir="0 0 -1" directional="true"/> -->
+    <!-- <geom name="floor" size="0 0 0.05" type="plane" rgba="0 0 0 1" conaffinity="0" contype="0"/> -->
+    <!-- <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/> -->
+
+    <!-- 可抓取正方体 -->
+    <body name="cube" pos="5.0 5.0 5.0">
+      <freejoint name="cube:joint"/>
+      <!-- <geom type="box" size="0.025 0.025 0.025" mass="0.2" 
+            rgba="0.8 0.2 0.2 1" friction="1.5 0.5 0.005"/> -->
+      <geom type="mesh" mesh="hand-2"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="body-2"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_left_1-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_left_2-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_left_3-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_right_1-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_right_2-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_right_3-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_up_1-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_up_2-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_up_3-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_up_4-1"  euler="0 0 -1.57 " rgba="0.2  0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <geom type="mesh" mesh="sat_up_5-1"  euler="0 0 -1.57 " rgba="0.2 0.8 0.2 1" friction="1.5 0.5 0.005"/>
+      <inertial pos="0 0 0" mass="0.2" diaginertia="0.0208 0.0208 0.0208"/>
+      <!-- <inertial pos="0 0 0" mass="100000" diaginertia="1000 1000 1000"/> -->
+
+      <!-- Satellite Body Frame: X=Red, Y=Green, Z=Blue -->
+      <!-- <site name="sat_x" pos="0.3 0 0" size="0.008 0.3" type="cylinder" rgba="1 0 0 1" euler="0 1.5707963 0"/>
+      <site name="sat_y" pos="0 0.3 0" size="0.008 0.3" type="cylinder" rgba="0 1 0 1" euler="-1.5707963 0 0"/>
+      <site name="sat_z" pos="0 0 0.3" size="0.008 0.3" type="cylinder" rgba="0 0 1 1"/> -->
+    </body>
+
+
+    <!-- World Frame Visualization -->
+    <!-- <body name="world_frame" pos="0 0 0">
+        <site name="world_x" pos="0.3 0 0" size="0.005 0.3" type="cylinder" rgba="1 0 0 1" euler="0 1.5707963 0"/>
+        <site name="world_y" pos="0 0.3 0" size="0.005 0.3" type="cylinder" rgba="0 1 0 1" euler="-1.5707963 0 0"/>
+        <site name="world_z" pos="0 0 0.3" size="0.005 0.3" type="cylinder" rgba="0 0 1 1"/>
+    </body> -->
+
+    <!-- 顶部相机视角 -->
+    <!-- <camera name="top_camera" mode="fixed" pos="-1.5 0 0.3" euler="0 -1.3 -1.57" fovy="53" /> -->
+
+  </worldbody>
+</mujoco>
