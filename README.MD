@@ -39,17 +39,13 @@ conda create -n robot python=3.10
 conda activate robot
 
 # macOS、Windows 以及遇到 pip ABI 问题的 Linux 环境，优先使用 conda-forge。
-conda install -c conda-forge pinocchio
+# conda install -c conda-forge pinocchio
 
 pip install -r requirements.txt
 pip install -e .
+pip install pin
+# pip installlerobot==0.4.4
 ```
-
-`requirements.txt` 已固定 `lerobot==0.4.4`，并包含 v2.1 writer 所需的
-PyArrow、PyAV 和 ZMQ 依赖。不要在使用 conda-forge Pinocchio 后再次安装
-pip 包 `pin`，否则可能出现动态库 ABI 冲突。
-
-
 
 ## 环境
 
@@ -104,7 +100,7 @@ Viewer，`RobotSensor` 仍会创建 MuJoCo 离屏渲染器并产生相机观测�
 - 通用成功判定要求双指接触、夹爪闭合命令大于 100、目标 6D 速度小于
   `0.1`，并连续满足 10 个控制周期。
 
-## 快速开始
+## 快速开始（有显示器）
 
 键盘遥操作：
 
@@ -146,13 +142,51 @@ python scripts/auto_collect_dataset/collect_autograb_lerobot_v21.py cube \
 | `scripts/evals/lerobot/lerobot_zmq_server.py` | ZMQ 策略推理服务端 |
 | `scripts/evals/lerobot/lerobot_zmq_client.py` | ZMQ MuJoCo 环境客户端 |
 
-以下文件是公共模块，不应直接运行：
 
-```text
-scripts/evals/lerobot/__init__.py
-scripts/evals/lerobot/lerobot_eval_common.py
-scripts/evals/lerobot/lerobot_zmq_protocol.py
+## 自动采集全部 8 个任务
+scripts/auto_collect_dataset/collect_dataset.sh
+
+运行：
+
+```bash
+bash scripts/auto_collect_dataset/collect_dataset.sh
 ```
+
+CLI 参数：无。脚本顶部集中提供三个主要配置：
+
+| Shell 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `EPISODES_PER_TASK` | `80` | 每个任务最终保存的 episode 数 |
+| `NUM_ENVS` | `4` | 每个任务内部使用的并行 MuJoCo worker 数 |
+| `OUTPUT_ROOT` | `data/local` | 8 个任务数据集的共同输出根目录 |
+
+脚本将依次采集以下任务：
+
+| 顺序 | 任务 | 输出子目录 |
+| --- | --- | --- |
+| 1 | `cube` | `cube_lerobot_v21` |
+| 2 | `satellite_handle` | `satellite_handle_lerobot_v21` |
+| 3 | `satellite_left_antenna_panel` | `satellite_left_antenna_panel_lerobot_v21` |
+| 4 | `satellite2_left_truss_connection` | `satellite2_left_truss_connection_lerobot_v21` |
+| 5 | `satellite3_left_antenna_panel` | `satellite3_left_antenna_panel_lerobot_v21` |
+| 6 | `satellite3_upper_rod` | `satellite3_upper_rod_lerobot_v21` |
+| 7 | `debris_antenna_panel` | `debris_antenna_panel_lerobot_v21` |
+| 8 | `debris_truss` | `debris_truss_lerobot_v21` |
+
+终端会输出当前任务序号、任务名、输出目录、开始时间、成功/失败和耗时。
+单个任务失败后脚本会继续执行剩余任务，最后打印成功/失败汇总，并在存在
+失败任务时返回非零退出码。
+
+采集器默认不会覆盖已有的非空数据集目录。重新批量采集时，请设置新的
+`OUTPUT_ROOT`，或者先自行处理已存在的目标目录。
+
+Linux headless 示例：
+
+```bash
+MUJOCO_GL=egl \
+  bash scripts/auto_collect_dataset/collect_dataset.sh
+```
+
 
 ## 脚本参数说明
 
@@ -442,51 +476,7 @@ python scripts/auto_collect_dataset/collect_autograb_lerobot_v21.py debris_truss
 
 </details>
 
-<details>
-<summary><code>scripts/auto_collect_dataset/collect_dataset.sh</code>：批量采集全部 8 个任务</summary>
 
-运行：
-
-```bash
-bash scripts/auto_collect_dataset/collect_dataset.sh
-```
-
-CLI 参数：无。脚本顶部集中提供三个主要配置：
-
-| Shell 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `EPISODES_PER_TASK` | `80` | 每个任务最终保存的 episode 数 |
-| `NUM_ENVS` | `4` | 每个任务内部使用的并行 MuJoCo worker 数 |
-| `OUTPUT_ROOT` | `data/local` | 8 个任务数据集的共同输出根目录 |
-
-脚本将依次采集以下任务：
-
-| 顺序 | 任务 | 输出子目录 |
-| --- | --- | --- |
-| 1 | `cube` | `cube_lerobot_v21` |
-| 2 | `satellite_handle` | `satellite_handle_lerobot_v21` |
-| 3 | `satellite_left_antenna_panel` | `satellite_left_antenna_panel_lerobot_v21` |
-| 4 | `satellite2_left_truss_connection` | `satellite2_left_truss_connection_lerobot_v21` |
-| 5 | `satellite3_left_antenna_panel` | `satellite3_left_antenna_panel_lerobot_v21` |
-| 6 | `satellite3_upper_rod` | `satellite3_upper_rod_lerobot_v21` |
-| 7 | `debris_antenna_panel` | `debris_antenna_panel_lerobot_v21` |
-| 8 | `debris_truss` | `debris_truss_lerobot_v21` |
-
-终端会输出当前任务序号、任务名、输出目录、开始时间、成功/失败和耗时。
-单个任务失败后脚本会继续执行剩余任务，最后打印成功/失败汇总，并在存在
-失败任务时返回非零退出码。
-
-采集器默认不会覆盖已有的非空数据集目录。重新批量采集时，请设置新的
-`OUTPUT_ROOT`，或者先自行处理已存在的目标目录。
-
-Linux headless 示例：
-
-```bash
-MUJOCO_GL=egl \
-  bash scripts/auto_collect_dataset/collect_dataset.sh
-```
-
-</details>
 
 <details>
 <summary><code>scripts/evals/lerobot/evaluate_lerobot_success_rate.py</code>：本地策略评估</summary>

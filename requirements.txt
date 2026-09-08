@@ -1,10 +1,8 @@
 gymnasium
 modelscope
-# pin==3.7.0 # win和mac建议使用conda安装  conda install pinocchio -c conda-forge
 mujoco
 pygame
 pyspacemouse==2.0.0
-# lerobot==0.4.4
 pyarrow>=14
 av>=15,<16
 pyzmq
