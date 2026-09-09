@@ -56,7 +56,7 @@ EXPECTED_PROFILES = {
     },
     "satellite3_upper_rod": {
         "env_id": "SpaceUR10e-Satellite3-v0",
-        "offset": (-0.678392, 0.00316, 0.213932),
+        "offset": (-0.678392, 0.00316, 0.210),
         "rotation": 0.0,
         "rotation_mode": "skip",
         "position_tolerance": 0.03,

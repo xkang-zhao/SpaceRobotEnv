@@ -23,6 +23,7 @@ class Kinematics:
 
         self.model = self.arm.model
         self.data = self.arm.data
+        self._error_data = self.model.createData()
 
     @staticmethod
     def create_target_pose(rotation_matrix: np.ndarray, translation_vector: np.ndarray) -> pin.SE3:
@@ -88,13 +89,34 @@ class Kinematics:
         
         return J_g, M_bb_inv, M_bm
 
+    def _compute_coupled_jacobian(self, q, frame_id):
+        """Update placements and return the Jacobian and momentum coupling.
+
+        Keep compute_matrices' inverse-returning interface for report consumers;
+        the control loop only needs the product solve(M_bb, M_bm).
+        """
+        model, data = self.model, self.data
+        pin.crba(model, data, q)
+        m_bb, m_bm = data.M[:6, :6], data.M[:6, 6:]
+        try:
+            coupling = np.linalg.solve(m_bb, m_bm)
+        except np.linalg.LinAlgError:
+            coupling = pinv(m_bb) @ m_bm
+        pin.computeJointJacobians(model, data, q)
+        # Joint Jacobians already update joint placements for this q.
+        pin.updateFramePlacements(model, data)
+        jacobian = pin.getFrameJacobian(
+            model, data, frame_id, pin.LOCAL_WORLD_ALIGNED
+        )
+        return jacobian[:, 6:] - jacobian[:, :6] @ coupling, coupling
+
     def step_ik(self, q, target_pose, frame_id, damping=1e-1, dt=0.05):
         '''单步 IK (Safety Tuned)'''
         # 1. Error
         # 计算正运动学。作用：根据当前的 q，更新所有连杆和 Frame 的位置。必须先做这一步才能知道现在手在哪。
         model = self.model
         data = self.data
-        pin.framesForwardKinematics(model, data, q)
+        J_g, coupling = self._compute_coupled_jacobian(q, frame_id)
         curr_pose = data.oMf[frame_id]
         
         # 计算位置误差（目标位置 - 当前位置）。这是一个 3D 向量
@@ -109,7 +131,6 @@ class Kinematics:
         
         # 2. Jacobian
         # J_g描述了“如果我动一下关节，考虑到基座的反向漂移，末端会怎么动”
-        J_g, M_bb_inv, M_bm = self.compute_matrices(q, frame_id)
         
         # 3. Velocity
         # print(f"q: {q}")
@@ -123,11 +144,11 @@ class Kinematics:
         g = J_g.T @ error
 
         # 求解线性方程组，得到机械臂关节的目标速度
-        v_m = inv(H) @ g
+        v_m = np.linalg.solve(H, g)
         
         # 4. Momentum Coupling
         # 根据动量守恒，计算基座的被动速度
-        v_b = -M_bb_inv @ M_bm @ v_m
+        v_b = -coupling @ v_m
         v_total = np.concatenate([v_b, v_m])
         
         # [关键安全限制] 限制最大关节速度
@@ -142,11 +163,22 @@ class Kinematics:
         q_next = pin.integrate(model, q, v_total * dt)
         return q_next, norm(error)
 
-    def solve_trajectory_ik(self, q_init, final_pose, steps=10):
+    def _target_error(self, q, target_pose, frame_id):
+        """Residual at q, in the same world-aligned convention as step_ik."""
+        pin.framesForwardKinematics(self.model, self._error_data, q)
+        pose = self._error_data.oMf[frame_id]
+        return norm(np.r_[
+            target_pose.translation - pose.translation,
+            pose.rotation @ pin.log3(pose.rotation.T @ target_pose.rotation),
+        ])
+
+    def solve_trajectory_ik(self, q_init, final_pose, steps=10, *, early_stop=True):
         '''
             q_init: np.ndarray 初始自由度(13维: 7维基座 + 6维机械臂)
             final_pose: pin.SE3 目标末端位姿
             steps: int 插值步数
+            early_stop: 在初始状态和每组10次迭代后检查最终目标；混合位姿
+                残差不超过1e-4时提前返回。False保留原有固定预算求解。
         
         '''
         model = self.model
@@ -154,6 +186,14 @@ class Kinematics:
 
         q = q_init.copy()
         frame_id = model.getFrameId(self.frame_name)
+        if steps < 1:
+            raise ValueError('IK interpolation steps must be positive')
+        # A stricter threshold than the existing 1e-3 refinement tolerance.
+        # Test the final target, never an intermediate interpolation waypoint.
+        if early_stop:
+            final_error = self._target_error(q, final_pose, frame_id)
+            if final_error <= 1e-4:
+                return q, final_error
         
         # 获取起点
         pin.framesForwardKinematics(model, data, q)
@@ -178,6 +218,12 @@ class Kinematics:
             # 对每个插值点执行多个小步迭代，确保收敛性和稳定性
             for _ in range(10): 
                 q, err = self.step_ik(q, target_pose_i, frame_id, dt=0.05, damping=5e-2)
+            if early_stop:
+                # A separate Data object avoids changing the legacy interpolation
+                # start_pose alias while checking the newly integrated state.
+                final_error = self._target_error(q, final_pose, frame_id)
+                if final_error <= 1e-4:
+                    return q, final_error
                 
             # 可选：输出调试信息（已注释）
             # if i % 20 == 0:
@@ -204,7 +250,34 @@ class Kinematics:
                 
         return q, err
 
-    def ik(self, q_init: np.ndarray, target_pose: pin.SE3, steps=10):
+    def _try_direct_ik(self, q_init, target_pose, frame_id):
+        """Solve a small target change; return None to retry from q_init.
+
+        dt is an internal numerical step, unrelated to MuJoCo's timestep.
+        Keep the existing damping and velocity norm limit. Accept only a
+        finite, decreasing residual at the same 1e-4 early-stop tolerance.
+        """
+        error = self._target_error(q_init, target_pose, frame_id)
+        if not 1e-4 < error <= 0.02:
+            return None
+        q = q_init.copy()
+        for _ in range(4):
+            for _ in range(10):
+                q, _ = self.step_ik(q, target_pose, frame_id, dt=0.2, damping=0.05)
+                if not np.isfinite(q).all():
+                    return None
+            next_error = self._target_error(q, target_pose, frame_id)
+            if not np.isfinite(next_error):
+                return None
+            if next_error >= error:
+                return None
+            if next_error <= 1e-4:
+                return q, next_error
+            error = next_error
+        return None
+
+    def ik(self, q_init: np.ndarray, target_pose: pin.SE3, steps=10, *,
+           early_stop=True, fast_path=True):
         """
         Solve the inverse kinematics problem to find joint angles that achieve the target end-effector pose.
         This method computes the joint configuration needed to reach a desired end-effector pose
@@ -212,7 +285,13 @@ class Kinematics:
         Args:
             q_init (np.ndarray): Initial joint configuration (starting point for IK solver).
             target_pose (pin.SE3): Target end-effector pose in SE3 format (position and orientation).
-            steps (int, optional): Number of solver iterations. Defaults to 100.
+            steps (int, optional): Number of interpolation points. Defaults to 10.
+            early_stop (bool): Check the final target after each interpolation
+                block and stop at residual <= 1e-4. Set False for the legacy
+                iteration schedule. This does not change grasp success criteria.
+            fast_path (bool): With early_stop and steps >= 8, try up to 40 direct
+                iterations for a mixed pose residual <= 0.02; otherwise use the
+                trajectory solver. Failure restarts from the original input.
         Returns:
             tuple: A tuple containing:
                 - q_final (np.ndarray): Joint configuration that achieves the target pose.
@@ -221,7 +300,14 @@ class Kinematics:
             - Uses pinocchio (pin) for forward kinematics calculations.
             - The actual IK solving is delegated to the solve_trajectory_ik method.
         """
-        q_final, final_err = self.solve_trajectory_ik(q_init, target_pose, steps=steps)
+        if fast_path and early_stop and steps >= 8:
+            frame_id = self.model.getFrameId(self.frame_name)
+            result = self._try_direct_ik(q_init, target_pose, frame_id)
+            if result is not None:
+                return result
+        q_final, final_err = self.solve_trajectory_ik(
+            q_init, target_pose, steps=steps, early_stop=early_stop
+        )
 
         return q_final, final_err
 

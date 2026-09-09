@@ -66,6 +66,194 @@ pip 包 `pin`，否则可能出现动态库 ABI 冲突。
 | `SpaceUR10e-DebrisAntennaPanel-v0` | `mjcf/5_debris_antenna_panel_scene.xml` | 天线板碎片 | X `[1.85, 2.00]`，Y `[-0.10, 0.10]`，Z `[2.65, 2.70]` |
 | `SpaceUR10e-DebrisTruss-v0` | `mjcf/6_debris_truss_scene.xml` | 桁架碎片 | X `[1.50, 1.65]`，Y `[-0.10, 0.10]`，Z `[2.65, 2.70]` |
 
+### 可选 MuJoCo Warp 物理后端（单环境实验功能）
+
+默认仍使用 CPU MuJoCo。NVIDIA CUDA GPU、Python >= 3.10 环境可安装
+可选依赖（不会安装或替换 Pinocchio，仍按上面的方式单独安装）：
+
+```bash
+pip install -e '.[warp]'
+```
+
+该 extra 固定 MuJoCo 3.12.0、MuJoCo Warp 3.12.0 和 Warp 1.17.0。
+建议使用独立环境，避免影响已有仿真或策略依赖。
+API 用法（从仓库根目录运行）：
+
+```python
+import gymnasium as gym
+import numpy as np
+import envs
+
+env = gym.make(
+    "SpaceUR10e-Cube-v0",
+    physics_backend="warp",  # "mujoco" 为默认值
+    warp_device="cuda:0",
+    observation_mode="state",
+    render_mode=None,
+)
+try:
+    obs, info = env.reset(seed=7)
+    obs, reward, terminated, truncated, info = env.step(np.zeros(7))
+finally:
+    env.close()
+```
+
+第一次 reset 会编译 GPU 内核，第一次 step 会捕获 CUDA Graph，耗时可能较长。
+每次动作仍执行 100 个物理子步；IK、planner、观测组装与成功判定保留在 CPU，
+每个控制周期后将 GPU 状态及接触回读到原有 `env.unwrapped.data`。
+CPU 与 Warp 共用的浮动基座 IK 现在会在初始状态和每组 10 次迭代后检查
+最终目标；位置（米）与旋转（弧度）拼接后的残差范数不超过 `1e-4` 时提前返回。
+未达标时仍保留原有插值与最多 50 次精调预算，环境成功判定不变。
+直接调用 `Kinematics.ik(..., early_stop=False)` 可使用原有迭代安排进行对照。
+默认还会对残差在 `(1e-4, 0.02]` 内的小幅目标变化尝试最多 40 次直接求解，
+内部数值步长为 `0.2`；物理 timestep 不变。残差不下降、出现非有限数值或预算内
+未达到 `1e-4` 时，从原始配置回退到插值求解。`fast_path=False` 可单独关闭此路径；
+`early_stop=False` 也会关闭它。该路径仅在插值预算 `steps >= 8` 时启用。
+reset 会重新上传初始状态并丢弃旧 Graph。只在 step 上传 `ctrl`；reset 后直接
+修改 CPU `data.qpos/qvel`、外力或模型参数不会同步到 GPU，此阶段不支持这种用法。
+接触和约束容量默认分别为 `warp_nconmax=128`、`warp_njmax=512`，可通过
+`gym.make` 参数调整；检测到容量溢出时抛出异常，不将丢失接触的仿真当作有效结果。
+
+当前验证目标为 Cube + state 观测，未实现多 world GPU 采集或批量渲染。
+`render_mode=None` 本身不会关闭 RGB 观测，禁用相机需设置 `observation_mode="state"`。
+传统 RGB/Viewer 路径仍依赖 MuJoCo 图形上下文。其他任务的抓取标定需要逐个验证。
+
+运行相同 seed 的完整 Cube 抓取比较：
+
+```bash
+python scripts/benchmark_physics.py --backend both --seed 7
+RUN_WARP_TESTS=1 python -m unittest discover -s test -p 'test_physics_backend.py'
+```
+
+对比脚本输出 JSON 结果，包括成功状态、控制步数、初始化耗时，以及预热后的
+IK、物理步进加回读、完整 env.step 平均耗时；未成功抓取时退出码为 1。
+脚本仅向规划器补充目标位置，不改变公开 state 观测，也不写入数据集。
+单环境 GPU 路径不保证加速，速度应以这些实测结果为准。
+
+单环境基线（NVIDIA A800 80GB，以上固定版本，Cube，seed=7，state 观测；
+不含初始化和 Graph 捕获）：
+
+| 后端 | 确认成功步数 | 平均 env.step | 其中 IK | 物理步进与回读 |
+| --- | --- | --- | --- | --- |
+| CPU MuJoCo | 96 | 26.2 ms | 22.5 ms | 3.6 ms |
+| CUDA Warp | 96 | 90.2 ms | 23.0 ms | 67.0 ms |
+
+两者均以双侧接触和连续 10 步条件确认成功。这是单个 seed 的兼容性基线，
+并非成功率统计；本阶段完成物理后端接入，批量 GPU 吞吐优化需后续独立实现。
+
+### 多 world 物理回放基准
+
+在安装上述 Warp 可选依赖后，可独立测量批量物理吞吐：
+
+```bash
+python scripts/benchmark_batch_physics.py --worlds 1 32 128 512 --seed 7 \
+  --output /tmp/warp_batch_results.json
+RUN_WARP_TESTS=1 python -m unittest discover -s test -p 'test_batch_physics_benchmark.py'
+```
+
+脚本先在 CPU 上生成一条完整 Cube 抓取的关节/夹爪控制序列，再从相同初始状态
+回放。所有 world 使用相同状态和控制，计时不含 IK、planner、相机、编译、
+Graph 捕获或状态校验；这不是批量 Gym 环境，也不测试不同 seed 的并行 reset。
+CPU 基线使用单核原生 `mj_step(..., nstep=100)`；GPU 每个控制周期显式同步，
+分别测量控制上传、100 个物理子步、所有 world 的 qpos/qvel 与溢出标记回读。
+输出同时包含纯物理吞吐和包含传输的吞吐，单位均为所有 world 的物理子步/秒。
+
+每个控制周期校验全部 world，报告与 CPU 的最大状态分量绝对误差，以及相对于
+world 0 的最大分量差异；默认 qpos 容差 `0.005`、qvel 容差 `0.1` 可通过帮助中的参数设置。
+qpos 含米、弧度及无量纲四元数，qvel 含米/秒及弧度/秒，这些是分量级数值比较，
+不能替代抓取成功率验证。超出容差时仍输出测量结果，但退出码为 1；非有限状态或
+接触/约束容量溢出直接报错。
+
+`process_gpu_memory_mib` 是 nvidia-smi 查询到的当前进程 GPU 占用（含上下文和
+缓存，查询不可用时为 null）；`warp_pool_used_mib` 是当前设备 Warp 内存池的
+在用分配。二者均在回放结束、资源释放前测量，不是峰值显存。
+各规模顺序运行并释放引用，驱动缓存可能保留，因此显存数值不能解释成纯模型大小。
+`--output` 仅创建新文件，拒绝覆盖已有结果。
+
+本机 A800 测量中，512 world 的纯物理吞吐约为 54.6 万子步/秒，是单核 CPU
+基线的 27.1 倍；完整口径、误差与显存数据见
+[多 world 基准报告](reports/analysis/warp_batch_benchmark.md)。
+
+### GPU 批量 state 环境（Cube，实验功能）
+
+`SpaceUR10eWarpVectorEnv` 是独立的 Gymnasium `VectorEnv`，需要 `.[warp]`
+可选依赖（包含 Gymnasium >= 1.1）。所有 world 共用一个 Cube 模型和 GPU 物理
+批次，各自维护动作目标、随机流、初始状态及成功计数。单环境注册 ID 保持原样。
+
+```python
+import numpy as np
+from envs.space_ur10e_warp_vector_env import SpaceUR10eWarpVectorEnv
+
+env = SpaceUR10eWarpVectorEnv(num_envs=4, device="cuda:0")
+try:
+    obs, info = env.reset(seed=7)  # 各 world 分别使用 seed 7、8、9、10
+    actions = np.zeros((4, 7), dtype=np.float32)
+    obs, rewards, terminated, truncated, info = env.step(actions)
+    done = terminated | truncated
+    # 先保存该步 transition，再对已结束的 world 做局部 reset。
+    if done.any():
+        obs, reset_info = env.reset(options={"reset_mask": done})
+finally:
+    env.close()
+```
+
+动作是 `(num_envs, 7)` 的有限数值，范围 `[-1, 1]`，保持工具坐标系增量语义。
+观测仍为 `joint_pos`、`base_pose`、`ee_pose`、`gripper_pos`，各增加第一维
+`num_envs`，保留单环境 shape/dtype 和 wxyz 四元数约定。reward、terminated、
+truncated 是 `(num_envs,)` 数组，info 为字典内的批量数组。目标和 pinch 位姿
+只通过脚本教师使用的 `get_planner_state()` 提供，不加入策略 state 观测。
+
+GPU 执行每周期 100 个物理子步、接触归属检测、观测计算、诊断奖励及逐 world
+成功计数；双侧接触、夹爪命令阈值、目标稳定速度、连续 10 个周期确认成功和
+距离失败条件与共享环境一致。返回智能体的 reward 仍是确认成功时为 1、否则为 0。
+默认 `ik_backend="cpu"` 在 CPU 逐 world 运行 Pinocchio IK。可选
+`ik_backend="gpu"` 使用 GPU IK 候选结果，大目标或未收敛/非有限候选从原始
+仿真状态回退到 CPU IK；`ik_backend="shadow"` 计算候选差异，但始终应用 CPU 控制。
+planner、末端目标更新及返回的 NumPy 数据仍在 CPU，因此还不是全 GPU 控制链路。
+
+双精度 GPU IK 原型现通过可选混合后端接入批量环境。它从 Pinocchio 导出常量模型，
+在 GPU 上计算运动学、基座惯性耦合、阻尼求解和 SE(3) 积分；仅支持 `arm.xml`
+的浮动基座加六关节链。采用 40 次迭代预算，初始混合位姿残差需不超过 0.02，
+最终残差不超过 1e-4 才应用候选，否则执行 CPU 回退。原型内部基座四元数使用
+Pinocchio 的 `xyzw`，与环境观测的 `wxyz` 不同；适配器转换并归一化 GPU 输入副本。
+
+```bash
+python reports/analysis/validate_gpu_ik.py --worlds 1 32 128 512 --output /tmp/gpu_ik_new.json
+RUN_WARP_TESTS=1 python -m unittest discover -s test -p 'test_gpu_ik_prototype.py'
+```
+
+输出文件必须不存在；首次运行包含 CUDA 编译。性能与精度结论见
+[GPU IK 原型验证报告](reports/analysis/gpu_ik_prototype.md)。
+
+自动 reset 模式为 `AutoresetMode.DISABLED`。首次 reset 必须初始化全部 world；
+之后 `reset_mask` 必须是长度为 `num_envs`、至少一项为 True 的布尔数组。
+任何 world 结束后，下一次 step 前必须重置它；部分 reset 保留其他 world 的
+物理状态、控制目标、成功计数和已返回观测。Graph 引用的 GPU 缓冲区保持不变。
+`seed` 可为整数（对 world w 使用 seed+w）、长度为 num_envs 的 seed 列表，或
+None（继续各自随机流）；局部 reset 只消费被选中 world 的随机流。
+
+运行不同初始位置的四路完整抓取与测试：
+
+```bash
+python scripts/auto_grasp_warp_vector.py --num-envs 4 --seed 7
+python scripts/auto_grasp_warp_vector.py --num-envs 32 --seed 7 --ik-backend gpu
+python scripts/auto_grasp_warp_vector.py --num-envs 32 --seed 7 --ik-backend shadow
+RUN_WARP_TESTS=1 python -m unittest discover -s test -p 'test_warp_vector_env.py'
+RUN_WARP_TESTS=1 python -m unittest discover -s test -p 'test_hybrid_gpu_ik.py'
+```
+
+本机 A800 上，seed 7、8、9、10 均在连续 10 周期确认后成功，分别为第
+96、76、113、118 个控制周期。演示复用现有 Cube planner，并在部分 world 完成
+后重置它们，使其余 world 可以继续；只报告每个 world 的第一次尝试。
+该验证不覆盖其他物体、视觉渲染、LeRobot 批量采集或训练框架适配。
+
+32 环境 seed 7–38 的 CPU、shadow、GPU 混合模式均确认成功；GPU 混合模式
+执行总时间从 CPU 的 23.79 秒降为 15.62 秒（含首次 Graph 捕获和局部 reset）。
+本次混合模式无回退；另以故障注入验证拒绝候选时从原状态执行 CPU 求解。
+`info` 在 GPU/shadow 模式增加 `ik_gpu_accepted`、`ik_cpu_fallback`、`ik_residual`；
+shadow 另有 `ik_shadow_joint_max_abs`，均按 world 返回。残差未达标不表示环境成功。
+详见 [混合 GPU IK 接入报告](reports/analysis/hybrid_gpu_ik.md)。
+
 ### 通用动作与观测
 
 动作是 7 维向量：
@@ -142,6 +330,8 @@ python scripts/auto_collect_dataset/collect_autograb_lerobot_v21.py cube \
 | `scripts/collect_dataset_keyboard_teleop.sh` | 键盘采集示例包装脚本 |
 | `scripts/auto_collect_dataset/collect_autograb_lerobot_v21.py` | 多进程自动采集 LeRobot v2.1 |
 | `scripts/auto_collect_dataset/collect_dataset.sh` | 一次采集全部 8 个 autograb 任务 |
+| `scripts/auto_collect_dataset/gpuwarp_collect_autograb_lerobot_v21.py` | CUDA Warp Cube 自动采集 LeRobot v2.1 |
+| `scripts/auto_collect_dataset/gpuwarp_collect_dataset.sh` | CUDA Warp Cube 批量采集包装脚本 |
 | `scripts/evals/lerobot/evaluate_lerobot_success_rate.py` | 本地 LeRobot 策略成功率评估 |
 | `scripts/evals/lerobot/lerobot_zmq_server.py` | ZMQ 策略推理服务端 |
 | `scripts/evals/lerobot/lerobot_zmq_client.py` | ZMQ MuJoCo 环境客户端 |
@@ -443,6 +633,54 @@ python scripts/auto_collect_dataset/collect_autograb_lerobot_v21.py debris_truss
 </details>
 
 <details>
+<summary><code>scripts/auto_collect_dataset/gpuwarp_collect_autograb_lerobot_v21.py</code>：GPU Warp Cube 自动采集</summary>
+
+该入口将 CUDA VectorEnv、GPU 混合 IK 和现有 LeRobot v2.1 writer 合并。当前只支持
+`cube`，因为 GPU VectorEnv 尚未实现卫星和碎片场景。每个 GPU world 维护独立 planner、
+episode buffer、重试计数和 seed；成功或失败的 world 只重置自身。
+
+默认 `--ik-backend gpu`：GPU 候选未达标时从原始状态运行 CPU IK 回退。RGB 不在
+VectorEnv 中批量输出：每个 world 的回读 MuJoCo 状态会被逐个渲染为视频帧，因此相机渲染
+和 H.264 写入仍会限制端到端采集吞吐。
+
+最小验证：
+
+```bash
+MUJOCO_GL=egl python scripts/auto_collect_dataset/gpuwarp_collect_autograb_lerobot_v21.py cube \
+  --output-dir data/local/cube_gpuwarp_lerobot_v21_test \
+  --episodes 2 --num-envs 2 --seed 7 \
+  --camera cam1=third_left_camera
+```
+
+正式采集：
+
+```bash
+MUJOCO_GL=egl python scripts/auto_collect_dataset/gpuwarp_collect_autograb_lerobot_v21.py cube \
+  --output-dir data/local/cube_gpuwarp_lerobot_v21 \
+  --episodes 100 --num-envs 32 --seed 0 \
+  --ik-backend gpu --max-attempts-per-episode 10
+```
+
+参数与普通自动采集基本一致：`--episodes` 是最终发布的 episode 数；`--num-envs` 是同一
+CUDA VectorEnv 的 world 数；`--camera NAME=OBS_KEY` 可重复指定视频流；`--keep-failed`
+允许失败尝试写入数据；`--overwrite` 只在新数据集完整生成和校验后替换目标目录。
+不支持 Viewer 或 Rerun。默认三路 RGB 为 `cam1=third_left_camera`、
+`cam2=third_right_camera`、`cam3=left_wrist_camera`。
+
+Shell 包装脚本只采集 Cube：
+
+```bash
+MUJOCO_GL=egl EPISODES=100 NUM_ENVS=32 IK_BACKEND=gpu \
+  OUTPUT_ROOT=data/local \
+  bash scripts/auto_collect_dataset/gpuwarp_collect_dataset.sh
+```
+
+需要 `mujoco-warp`、`warp-lang`、Pinocchio、PyAV 和 PyArrow。先在小输出目录验证；
+目标目录非空时需显式传 `--overwrite`，且 GPU 采集不会向已有数据集追加。
+
+</details>
+
+<details>
 <summary><code>scripts/auto_collect_dataset/collect_dataset.sh</code>：批量采集全部 8 个任务</summary>
 
 运行：
@@ -585,7 +823,7 @@ python scripts/evals/lerobot/lerobot_zmq_client.py \
 | `satellite_left_antenna_panel` | `[-0.265751, 0.544939, 0.0]` | absolute，tool Z `π/2` |
 | `satellite2_left_truss_connection` | `[-1.267780, 0.476677, 0.426568]` | skip rotation |
 | `satellite3_left_antenna_panel` | `[-0.776456, 0.576061, -0.007349]` | absolute，tool Z `π/2` |
-| `satellite3_upper_rod` | `[-0.678392, 0.003160, 0.218000]` | skip rotation |
+| `satellite3_upper_rod` | `[-0.678392, 0.003160, 0.210000]` | skip rotation |
 | `debris_antenna_panel` | `[-0.468390, 0.127419, 0.132495]` | relative local Z `-0.61` |
 | `debris_truss` | `[-0.136453, 0.075573, 0.118878]` | relative local Z `-0.8` |
 

@@ -65,7 +65,9 @@ LATERAL_GRASP_PROFILES = {
         env_id="SpaceUR10e-Satellite3-v0",
         description="Auto-grasp the satellite3 upper rod calibrated grasp point.",
         success_label="satellite3 upper rod grasp confirmed",
-        grasp_offset_body=(-0.678392, 0.00316, 0.218),
+        # EE target in the satellite body frame. The 0.218 m height caused
+        # transient contact and loss of the rod; 0.210 m seats it in the pads.
+        grasp_offset_body=(-0.678392, 0.00316, 0.210),
         tool_z_rotation=0.0,
         rotation_mode="skip",
         object_label="satellite",

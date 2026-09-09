@@ -12,6 +12,7 @@ from mujoco_robot.robot_controller import RobotController
 from mujoco_robot.robot_ik import Kinematics
 from mujoco_robot.robot_sensor import RobotSensor
 from mujoco_robot.robot_viewer import RobotViewer
+from mujoco_robot.physics_backend import make_physics_backend
 
 
 DEFAULT_TARGET_INIT_RANGE = {
@@ -44,12 +45,19 @@ class SpaceUR10eEnv(gym.Env):
         viewer_config=None,
         target_body_name="cube",
         target_joint_name="cube:joint",
+        physics_backend="mujoco",
+        warp_device="cuda:0",
+        warp_nconmax=128,
+        warp_njmax=512,
     ):
         super().__init__()
 
         self.scene_path = scene_path
         self.arm_path = arm_path
         self.render_mode = render_mode
+        if physics_backend not in {"mujoco", "warp"}:
+            raise ValueError(f"Unknown physics_backend {physics_backend!r}; choose 'mujoco' or 'warp'.")
+        self.physics_backend = physics_backend
         if observation_mode not in {"state", "rgb"}:
             raise ValueError(
                 "observation_mode must be either 'state' or 'rgb', "
@@ -71,6 +79,11 @@ class SpaceUR10eEnv(gym.Env):
             
         self.model = mujoco.MjModel.from_xml_path(scene_path) # type: ignore
         self.data = mujoco.MjData(self.model) # type: ignore
+        self._physics = make_physics_backend(
+            physics_backend, self.model, self.data,
+            device=warp_device, scene_path=scene_path,
+            nconmax=warp_nconmax, njmax=warp_njmax,
+        )
 
         # 2. 初始化子模块
         self.kinematics = Kinematics(arm_path, frame_name)
@@ -235,9 +248,10 @@ class SpaceUR10eEnv(gym.Env):
 
         # 直接设置关节状态
         self.controller.update_qpos(init_q[7:])
-        self.controller.update_control(init_q[7:])
         self.controller.update_target_gripper(actions=None, reset=0)
+        self.controller.update_control(init_q[7:])
         mujoco.mj_forward(self.model, self.data) # 正向动力学
+        self._physics.reset()
 
         # 重置连续成功计数器
         self._success_counter = 0
@@ -331,7 +345,9 @@ class SpaceUR10eEnv(gym.Env):
 
         for i in range(self.data.ncon):
             contact = self.data.contact[i]
-            geom1, geom2 = contact.geom1, contact.geom2
+            # Warp readback populates geom, not the deprecated geom1/geom2
+            # fields (which can contain stale CPU contacts).
+            geom1, geom2 = contact.geom
 
             # 检查接触对中是否包含目标物体 geom
             if geom1 in self.target_geom_ids:
@@ -436,10 +452,8 @@ class SpaceUR10eEnv(gym.Env):
 
         return reward, reward_info
 
-    def _apply_ik_control(self, target_pose, steps=100):
-        """
-        封装 main.py 中的 IK 计算和仿真步进逻辑
-        """
+    def _compute_ik_control(self, target_pose):
+        """根据当前 MuJoCo 配置求解浮动基座 IK，仅写入控制信号。"""
         # 准备 Pinocchio 需要的状态向量 (处理四元数顺序)
         sim_q = self.data.qpos.copy()
         current_q_pin = np.zeros(13)
@@ -458,9 +472,10 @@ class SpaceUR10eEnv(gym.Env):
         # 更新控制信号
         self.controller.update_control(new_q[7:])
 
+    def _apply_ik_control(self, target_pose, steps=100):
+        self._compute_ik_control(target_pose)
         # 仿真步进 (Frame Skip)
-        for _ in range(steps):
-            mujoco.mj_step(self.model, self.data) # type: ignore
+        self._physics.step(steps)
         
     def _init_target(self):
         """Randomize the target pose using the configured XYZ ranges."""
@@ -537,3 +552,4 @@ class SpaceUR10eEnv(gym.Env):
             self.viewer.close()
         if self.sensor is not None:
             self.sensor.close()
+        self._physics.close()
