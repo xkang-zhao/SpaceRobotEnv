@@ -1,0 +1,231 @@
+{
+  "frame": "EE target relative to satellite body",
+  "offset_before": [
+    -0.678392,
+    0.00316,
+    0.218
+  ],
+  "offset_after": [
+    -0.678392,
+    0.00316,
+    0.21
+  ],
+  "backend": "mujoco",
+  "observation_mode": "state",
+  "mujoco": "3.12.0",
+  "pinocchio": "4.1.0",
+  "restored_old_height_0_213932": [
+    {
+      "seed": 0,
+      "steps": 103,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 1,
+      "steps": 91,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 2,
+      "steps": 109,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 3,
+      "steps": 93,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 4,
+      "steps": 124,
+      "confirmed": false,
+      "counter": 0,
+      "failure": "grasp was not confirmed"
+    },
+    {
+      "seed": 5,
+      "steps": 122,
+      "confirmed": false,
+      "counter": 4,
+      "failure": "grasp was not confirmed"
+    },
+    {
+      "seed": 6,
+      "steps": 109,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 7,
+      "steps": 111,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 8,
+      "steps": 109,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 9,
+      "steps": 112,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    }
+  ],
+  "final_validation": [
+    {
+      "seed": 0,
+      "steps": 110,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 1,
+      "steps": 90,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 2,
+      "steps": 101,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 3,
+      "steps": 103,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 4,
+      "steps": 101,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 5,
+      "steps": 113,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 6,
+      "steps": 103,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 7,
+      "steps": 97,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 8,
+      "steps": 98,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 9,
+      "steps": 110,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 10,
+      "steps": 107,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 11,
+      "steps": 86,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 12,
+      "steps": 90,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 13,
+      "steps": 108,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 14,
+      "steps": 114,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 15,
+      "steps": 107,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 16,
+      "steps": 93,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 17,
+      "steps": 117,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 18,
+      "steps": 105,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    },
+    {
+      "seed": 19,
+      "steps": 105,
+      "confirmed": true,
+      "counter": 10,
+      "failure": null
+    }
+  ]
+}

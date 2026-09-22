@@ -1,0 +1,169 @@
+{
+  "validation": {
+    "samples": 96,
+    "max_errors": {
+      "mass_abs": 3.410605131648481e-13,
+      "jacobian_abs": 3.3306690738754696e-15,
+      "pose_abs": 3.7192471324942744e-15,
+      "error_vector_abs": 1.4210854715202004e-14,
+      "single_step_q_abs": 2.1094237467877974e-15,
+      "momentum_relative": 4.513791608380467e-16,
+      "forty_step_q_abs": 5.1587027982691325e-09,
+      "final_residual_abs": 8.43769498715119e-15
+    },
+    "groups": {
+      "aligned": {
+        "total": 8,
+        "accepted": 8
+      },
+      "large": {
+        "total": 8,
+        "accepted": 0
+      },
+      "near_pi": {
+        "total": 8,
+        "accepted": 0
+      },
+      "small": {
+        "total": 64,
+        "accepted": 41
+      },
+      "unreachable": {
+        "total": 8,
+        "accepted": 0
+      }
+    }
+  },
+  "recorded_cube_states": 96,
+  "benchmark": [
+    {
+      "worlds": 1,
+      "setup_s": 0.008542938623577356,
+      "cpu_fixed_ms": 1.8832813948392868,
+      "cpu_production_ms": 1.4382703229784966,
+      "gpu_upload_ms": 0.20753716429074606,
+      "gpu_compute_ms": 1.8923021852970123,
+      "gpu_readback_ms": 0.22344679261247316,
+      "gpu_total_ms": 2.3232861422002316,
+      "gpu_timing_samples_ms": [
+        [
+          0.26762764900922775,
+          2.409781329333782,
+          0.39741164073348045
+        ],
+        [
+          0.19162986427545547,
+          1.6345670446753502,
+          0.14940183609724045
+        ],
+        [
+          0.16335397958755493,
+          1.6325581818819046,
+          0.12352690100669861
+        ]
+      ],
+      "accepted": 1,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 8.881784197001252e-16,
+      "q_abs_vs_production": 4.491100629011591e-05,
+      "max_accepted_residual": 9.88471168264472e-05
+    },
+    {
+      "worlds": 32,
+      "setup_s": 0.007442791014909744,
+      "cpu_fixed_ms": 61.732479836791754,
+      "cpu_production_ms": 66.07568683102727,
+      "gpu_upload_ms": 0.26989572991927463,
+      "gpu_compute_ms": 3.2025626860558987,
+      "gpu_readback_ms": 0.1606200821697712,
+      "gpu_total_ms": 3.6330784981449447,
+      "gpu_timing_samples_ms": [
+        [
+          0.29401108622550964,
+          3.4929420799016953,
+          0.17363810911774635
+        ],
+        [
+          0.26150699704885483,
+          3.0580959282815456,
+          0.15883613377809525
+        ],
+        [
+          0.2541691064834595,
+          3.056650049984455,
+          0.14938600361347198
+        ]
+      ],
+      "accepted": 32,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 1.887379141862766e-15,
+      "q_abs_vs_production": 0.00014262311703538977,
+      "max_accepted_residual": 9.991190369696413e-05
+    },
+    {
+      "worlds": 128,
+      "setup_s": 0.008068324998021126,
+      "cpu_fixed_ms": 222.8761683218181,
+      "cpu_production_ms": 240.07897498086095,
+      "gpu_upload_ms": 0.5177228401104609,
+      "gpu_compute_ms": 6.604368487993876,
+      "gpu_readback_ms": 0.19251136109232903,
+      "gpu_total_ms": 7.314602689196667,
+      "gpu_timing_samples_ms": [
+        [
+          0.5597039125859737,
+          6.906574126332998,
+          0.21637510508298874
+        ],
+        [
+          0.5030049942433834,
+          6.456158123910427,
+          0.18945708870887756
+        ],
+        [
+          0.4904596135020256,
+          6.450373213738203,
+          0.17170188948512077
+        ]
+      ],
+      "accepted": 128,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 2.886579864025407e-15,
+      "q_abs_vs_production": 0.00017495998351013675,
+      "max_accepted_residual": 9.999442365163983e-05
+    },
+    {
+      "worlds": 512,
+      "setup_s": 0.00881293136626482,
+      "cpu_fixed_ms": 880.0801290199161,
+      "cpu_production_ms": 945.9542878903449,
+      "gpu_upload_ms": 1.4477002744873364,
+      "gpu_compute_ms": 12.022082383433977,
+      "gpu_readback_ms": 0.2691405825316906,
+      "gpu_total_ms": 13.738923240453005,
+      "gpu_timing_samples_ms": [
+        [
+          1.5068058855831623,
+          12.33628811314702,
+          0.20069489255547523
+        ],
+        [
+          1.442846842110157,
+          11.85254193842411,
+          0.18607405945658684
+        ],
+        [
+          1.39344809576869,
+          11.877417098730803,
+          0.4206527955830097
+        ]
+      ],
+      "accepted": 512,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 2.886579864025407e-15,
+      "q_abs_vs_production": 0.00017495998351013675,
+      "max_accepted_residual": 9.999442365163983e-05
+    }
+  ],
+  "notes": "FP64 isolated prototype, full GPU dynamics and IK. Fixed 40-iteration budget, 1e-4 stop. No trajectory fallback on GPU; unaccepted rows require CPU fallback. Timing includes synchronous upload/readback separately. CPU serial baseline. No environment integration or grasp closed-loop validation."
+}

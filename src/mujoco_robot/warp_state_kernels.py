@@ -34,6 +34,20 @@ def masked_rows(mask: wp.array[bool], source: wp.array2d[float], dest: wp.array2
 
 
 @wp.kernel
+def masked_scalar(mask: wp.array[bool], source: wp.array[float], dest: wp.array[float]):
+    w = wp.tid()
+    if mask[w]:
+        dest[w] = source[w]
+
+
+@wp.kernel
+def masked_counts(mask: wp.array[bool], source: wp.array[int], dest: wp.array[int]):
+    w = wp.tid()
+    if mask[w]:
+        dest[w] = source[w]
+
+
+@wp.kernel
 def pack_state(qpos: wp.array2d[float], qvel: wp.array2d[float], ctrl: wp.array2d[float],
                sites: wp.array2d[wp.vec3], matrices: wp.array2d[wp.mat33],
                bodies: wp.array2d[wp.vec3], quats: wp.array2d[wp.quat],
@@ -59,7 +73,7 @@ def pack_state(qpos: wp.array2d[float], qvel: wp.array2d[float], ctrl: wp.array2
     for j in range(4):
         teacher[w, 3 + j] = quats[w, target][j]  # MJWarp body quaternions are wxyz.
     obs[w, 20] = wp.clamp((qpos[w, grip] - params[0]) / (params[1] - params[0]), 0.0, 1.0)
-    speed_sq = float(0.0)
+    speed_sq = 0.0
     for j in range(6):
         speed_sq += qvel[w, dof + j] * qvel[w, dof + j]
     success = bits[w] == 3 and ctrl[w, 6] > params[2] and wp.sqrt(speed_sq) < params[3]
@@ -72,21 +86,21 @@ def pack_state(qpos: wp.array2d[float], qvel: wp.array2d[float], ctrl: wp.array2
     dist = wp.length(sites[w, pinch] - bodies[w, target])
     truncated[w] = int(dist > params[4])
     reach = -params[6] * dist
-    align = float(0.0)
+    align = 0.0
     if dist < params[5]:
-        dot = float(0.0)
+        dot = 0.0
         for j in range(4):
             dot += obs[w, 16 + j] * teacher[w, 3 + j]
         align = -params[7] * 2.0 * wp.acos(wp.clamp(wp.abs(dot), 0.0, 1.0))
-    contact = float(0.0)
+    contact = 0.0
     if bits[w] != 0:
         contact += params[8]
     if bits[w] == 3:
         contact += params[9]
-    success_reward = float(0.0)
+    success_reward = 0.0
     if success:
         success_reward = params[10]
-    action_sq = float(0.0)
+    action_sq = 0.0
     for j in range(7):
         action_sq += actions[w, j] * actions[w, j]
     action_penalty = -params[11] * action_sq

@@ -1,0 +1,250 @@
+{
+  "versions": {
+    "mujoco": "3.12.0",
+    "gymnasium": "1.3.0",
+    "numpy": "2.4.6"
+  },
+  "pinocchio": "4.1.0",
+  "cube": {
+    "mode": "state",
+    "samples": 285,
+    "cameras": [],
+    "episodes": [
+      {
+        "seed": 7,
+        "steps": 96,
+        "success": true
+      },
+      {
+        "seed": 8,
+        "steps": 76,
+        "success": true
+      },
+      {
+        "seed": 9,
+        "steps": 113,
+        "success": true
+      }
+    ],
+    "stats": {
+      "total": {
+        "mean_ms": 15.959727435087721,
+        "median_ms": 16.602992,
+        "p95_ms": 17.7861726,
+        "fraction_of_total_percent": 100.0
+      },
+      "action": {
+        "mean_ms": 0.07813896140350876,
+        "median_ms": 0.072759,
+        "p95_ms": 0.10655300000000001,
+        "fraction_of_total_percent": 0.48960085140125253
+      },
+      "ik": {
+        "mean_ms": 12.22917718245614,
+        "median_ms": 13.112038,
+        "p95_ms": 14.0147284,
+        "fraction_of_total_percent": 76.62522578907016
+      },
+      "ik_conversion_control": {
+        "mean_ms": 0.02671484912280702,
+        "median_ms": 0.024274,
+        "p95_ms": 0.040806400000000013,
+        "fraction_of_total_percent": 0.1673891313712162
+      },
+      "physics_100_substeps": {
+        "mean_ms": 3.5333784280701757,
+        "median_ms": 3.342889,
+        "p95_ms": 4.9411766,
+        "fraction_of_total_percent": 22.1393406775982
+      },
+      "state_observation": {
+        "mean_ms": 0.03745557192982456,
+        "median_ms": 0.032574,
+        "p95_ms": 0.06100280000000001,
+        "fraction_of_total_percent": 0.23468804265089058
+      },
+      "camera_scene_update": {
+        "mean_ms": 0.0,
+        "median_ms": 0.0,
+        "p95_ms": 0.0,
+        "fraction_of_total_percent": 0.0
+      },
+      "camera_render_readback": {
+        "mean_ms": 0.0,
+        "median_ms": 0.0,
+        "p95_ms": 0.0,
+        "fraction_of_total_percent": 0.0
+      },
+      "camera_other": {
+        "mean_ms": 0.0,
+        "median_ms": 0.0,
+        "p95_ms": 0.0,
+        "fraction_of_total_percent": 0.0
+      },
+      "reward_and_contact": {
+        "mean_ms": 0.03351805964912281,
+        "median_ms": 0.030889,
+        "p95_ms": 0.05686080000000001,
+        "fraction_of_total_percent": 0.21001649173176234
+      },
+      "other_including_termination_and_wrappers": {
+        "mean_ms": 0.02134438245614035,
+        "median_ms": 0.019068,
+        "p95_ms": 0.033234400000000004,
+        "fraction_of_total_percent": 0.13373901617651926
+      },
+      "contact_detection_subset": {
+        "mean_ms": 0.005051438596491228,
+        "median_ms": 0.001932,
+        "p95_ms": 0.0203574,
+        "fraction_of_total_percent": 0.031651158311047076
+      }
+    }
+  },
+  "task_comparison": [
+    {
+      "task": "cube",
+      "early_stop": false,
+      "steps": 96,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 19200,
+      "elapsed_s": 1.6119604599662125
+    },
+    {
+      "task": "cube",
+      "early_stop": true,
+      "steps": 96,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 17610,
+      "elapsed_s": 1.5886016143485904
+    },
+    {
+      "task": "satellite_handle",
+      "early_stop": false,
+      "steps": 79,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 15800,
+      "elapsed_s": 1.3535194848664105
+    },
+    {
+      "task": "satellite_handle",
+      "early_stop": true,
+      "steps": 79,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 13010,
+      "elapsed_s": 1.1973734349012375
+    },
+    {
+      "task": "satellite_left_antenna_panel",
+      "early_stop": false,
+      "steps": 181,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 36200,
+      "elapsed_s": 3.1112874899990857
+    },
+    {
+      "task": "satellite_left_antenna_panel",
+      "early_stop": true,
+      "steps": 181,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 31820,
+      "elapsed_s": 2.9013091940432787
+    },
+    {
+      "task": "satellite2_left_truss_connection",
+      "early_stop": false,
+      "steps": 117,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 23400,
+      "elapsed_s": 2.0299730710685253
+    },
+    {
+      "task": "satellite2_left_truss_connection",
+      "early_stop": true,
+      "steps": 117,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 21180,
+      "elapsed_s": 1.9247717149555683
+    },
+    {
+      "task": "satellite3_left_antenna_panel",
+      "early_stop": false,
+      "steps": 158,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 31600,
+      "elapsed_s": 2.8606805629096925
+    },
+    {
+      "task": "satellite3_left_antenna_panel",
+      "early_stop": true,
+      "steps": 157,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 28090,
+      "elapsed_s": 2.536440954077989
+    },
+    {
+      "task": "satellite3_upper_rod",
+      "early_stop": false,
+      "steps": 107,
+      "confirmed": false,
+      "reason": "environment truncated",
+      "iterations": 21400,
+      "elapsed_s": 1.9574817270040512
+    },
+    {
+      "task": "satellite3_upper_rod",
+      "early_stop": true,
+      "steps": 119,
+      "confirmed": false,
+      "reason": "grasp was not confirmed",
+      "iterations": 19350,
+      "elapsed_s": 1.918324925005436
+    },
+    {
+      "task": "debris_antenna_panel",
+      "early_stop": false,
+      "steps": 81,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 16200,
+      "elapsed_s": 1.51832469785586
+    },
+    {
+      "task": "debris_antenna_panel",
+      "early_stop": true,
+      "steps": 81,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 14170,
+      "elapsed_s": 1.2917697662487626
+    },
+    {
+      "task": "debris_truss",
+      "early_stop": false,
+      "steps": 101,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 20200,
+      "elapsed_s": 1.8016544887796044
+    },
+    {
+      "task": "debris_truss",
+      "early_stop": true,
+      "steps": 98,
+      "confirmed": true,
+      "reason": null,
+      "iterations": 14870,
+      "elapsed_s": 1.4850091286934912
+    }
+  ]
+}

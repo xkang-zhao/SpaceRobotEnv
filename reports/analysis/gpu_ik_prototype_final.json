@@ -1,0 +1,189 @@
+{
+  "validation": {
+    "samples": 96,
+    "max_errors": {
+      "mass_abs": 3.410605131648481e-13,
+      "jacobian_abs": 3.3306690738754696e-15,
+      "pose_abs": 3.7192471324942744e-15,
+      "error_vector_abs": 1.4210854715202004e-14,
+      "single_step_q_abs": 2.1094237467877974e-15,
+      "momentum_relative": 4.513791608380467e-16,
+      "forty_step_q_abs": 5.1587027982691325e-09,
+      "final_residual_abs": 8.43769498715119e-15
+    },
+    "groups": {
+      "aligned": {
+        "total": 8,
+        "accepted": 8
+      },
+      "large": {
+        "total": 8,
+        "accepted": 0
+      },
+      "near_pi": {
+        "total": 8,
+        "accepted": 0
+      },
+      "small": {
+        "total": 64,
+        "accepted": 41
+      },
+      "unreachable": {
+        "total": 8,
+        "accepted": 0
+      }
+    }
+  },
+  "recorded_cube_states": 96,
+  "benchmark": [
+    {
+      "worlds": 1,
+      "setup_s": 0.008015220984816551,
+      "cpu_fixed_ms": 1.8404549919068813,
+      "cpu_production_ms": 1.5771500766277313,
+      "gpu_upload_ms": 0.1948156083623568,
+      "gpu_compute_ms": 1.8551756317416828,
+      "gpu_readback_ms": 0.18515856936573982,
+      "gpu_total_ms": 2.2351498094697795,
+      "gpu_timing_samples_ms": [
+        [
+          0.23694289848208427,
+          2.298424020409584,
+          0.2839299850165844
+        ],
+        [
+          0.18486008048057556,
+          1.6346289776265621,
+          0.1358427107334137
+        ],
+        [
+          0.16264384612441063,
+          1.632473897188902,
+          0.13570301234722137
+        ]
+      ],
+      "accepted": 1,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 8.881784197001252e-16,
+      "q_abs_vs_production": 4.491100629011591e-05,
+      "max_joint_difference_vs_production_rad": 4.491100629011591e-05,
+      "max_base_translation_difference_vs_production_m": 6.594994610177403e-07,
+      "max_base_rotation_difference_vs_production_rad": 2.866225201139683e-06,
+      "max_ee_position_error_m": 9.882802147474474e-05,
+      "max_ee_rotation_error_rad": 1.9428526163072474e-06,
+      "max_accepted_residual": 9.88471168264472e-05
+    },
+    {
+      "worlds": 32,
+      "setup_s": 0.012099901214241982,
+      "cpu_fixed_ms": 66.76059309393167,
+      "cpu_production_ms": 67.16855801641941,
+      "gpu_upload_ms": 0.314266886562109,
+      "gpu_compute_ms": 3.2123724619547525,
+      "gpu_readback_ms": 0.16741718476017317,
+      "gpu_total_ms": 3.6940565332770348,
+      "gpu_timing_samples_ms": [
+        [
+          0.3148522228002548,
+          3.520933911204338,
+          0.1825210638344288
+        ],
+        [
+          0.2696467563509941,
+          3.058367408812046,
+          0.17507560551166534
+        ],
+        [
+          0.35830168053507805,
+          3.0578160658478737,
+          0.14465488493442535
+        ]
+      ],
+      "accepted": 32,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 1.887379141862766e-15,
+      "q_abs_vs_production": 0.00014262311703538977,
+      "max_joint_difference_vs_production_rad": 0.00014262311703538977,
+      "max_base_translation_difference_vs_production_m": 1.836640040966425e-06,
+      "max_base_rotation_difference_vs_production_rad": 6.509396073301115e-06,
+      "max_ee_position_error_m": 9.975009141032504e-05,
+      "max_ee_rotation_error_rad": 5.6839919056267805e-06,
+      "max_accepted_residual": 9.991190369696413e-05
+    },
+    {
+      "worlds": 128,
+      "setup_s": 0.007535694167017937,
+      "cpu_fixed_ms": 234.31674530729651,
+      "cpu_production_ms": 250.3443560563028,
+      "gpu_upload_ms": 0.5072241959472498,
+      "gpu_compute_ms": 6.6078345601757364,
+      "gpu_readback_ms": 0.16675827403863272,
+      "gpu_total_ms": 7.281817030161618,
+      "gpu_timing_samples_ms": [
+        [
+          0.5364143289625645,
+          6.921370048075914,
+          0.18049171194434166
+        ],
+        [
+          0.49726199358701706,
+          6.454060785472393,
+          0.16697635874152184
+        ],
+        [
+          0.48799626529216766,
+          6.448072846978903,
+          0.15280675143003464
+        ]
+      ],
+      "accepted": 128,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 2.886579864025407e-15,
+      "q_abs_vs_production": 0.00017495998351013675,
+      "max_joint_difference_vs_production_rad": 0.00017495998351013675,
+      "max_base_translation_difference_vs_production_m": 1.836640040966425e-06,
+      "max_base_rotation_difference_vs_production_rad": 6.509396073301115e-06,
+      "max_ee_position_error_m": 9.98408129741809e-05,
+      "max_ee_rotation_error_rad": 3.5844192330741534e-05,
+      "max_accepted_residual": 9.999442365163983e-05
+    },
+    {
+      "worlds": 512,
+      "setup_s": 0.008839838206768036,
+      "cpu_fixed_ms": 911.9374100118876,
+      "cpu_production_ms": 1127.9636761173606,
+      "gpu_upload_ms": 1.5351652788619201,
+      "gpu_compute_ms": 12.013498693704605,
+      "gpu_readback_ms": 0.1943033809463183,
+      "gpu_total_ms": 13.742967353512842,
+      "gpu_timing_samples_ms": [
+        [
+          1.576076727360487,
+          12.310436926782131,
+          0.2220352180302143
+        ],
+        [
+          1.5173489227890968,
+          11.868906207382679,
+          0.19455794245004654
+        ],
+        [
+          1.5120701864361763,
+          11.861152946949005,
+          0.16631698235869408
+        ]
+      ],
+      "accepted": 512,
+      "needs_fallback": 0,
+      "q_abs_vs_same_schedule": 2.886579864025407e-15,
+      "q_abs_vs_production": 0.00017495998351013675,
+      "max_joint_difference_vs_production_rad": 0.00017495998351013675,
+      "max_base_translation_difference_vs_production_m": 1.836640040966425e-06,
+      "max_base_rotation_difference_vs_production_rad": 6.509396073301115e-06,
+      "max_ee_position_error_m": 9.98408129741809e-05,
+      "max_ee_rotation_error_rad": 3.5844192330741534e-05,
+      "max_accepted_residual": 9.999442365163983e-05
+    }
+  ],
+  "notes": "FP64 isolated prototype, full GPU dynamics and IK. Fixed 40-iteration budget, 1e-4 stop. No trajectory fallback on GPU; unaccepted rows require CPU fallback. Timing includes synchronous upload/readback separately. CPU serial baseline. No environment integration or grasp closed-loop validation."
+}

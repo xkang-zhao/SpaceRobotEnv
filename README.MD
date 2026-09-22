@@ -256,6 +256,23 @@ shadow 另有 `ik_shadow_joint_max_abs`，均按 world 返回。残差未达标�
 
 ### 通用动作与观测
 
+RLinf 的八任务 GPU PPO 接入已提供独立的
+`spaceur10e_warp_ppo_openpi_rlinf` 配置，Cube 单场景基线保留为
+`spaceur10e_cube_warp_ppo_openpi_rlinf`。启动说明见同工作区
+`RLinf/docs/spaceur10e_warp_ppo.md`。批量环境新增 `repo_root` 参数，可从其他
+工作目录加载模型；`step(actions, active_mask=...)` 可暂停已结束的 world，
+保留其积分状态与观测，供 PPO 在动作块末尾统一 reset。省略 mask 时保持原有
+行为：任何 world 结束后必须先 reset。
+
+批量环境的 `env_id` 参数支持注册的六种场景；`SpaceUR10eWarpGroup`
+将八种任务按场景分组，同组 world 在 GPU 上并行，各场景组依次执行。
+RGB 仍逐 world 渲染，并在动作块边界/终止时采样；不是批量渲染实现。
+
+可用 `physics_substeps_per_graph=10` 将 100 个物理子步拆成 10 次同图回放，
+控制频率和每周期一次成功计数保持不变。底层默认 100；RLinf GPU 示例配置使用 10。
+八任务完整 planner 对照入口为 `scripts/validate_warp_tasks.py --backend cpu`
+及 `--backend warp --substeps-per-graph 10`，不写入数据集或模型权重。
+
 动作是 7 维向量：
 
 ```text
@@ -871,3 +888,21 @@ set KMP_DUPLICATE_LIB_OK=TRUE
 基座中心:          (0, 0, 2)
 初始末端目标:      (1.2, 0.1, 2.7, 1.57, 0.0, 1.57)
 ```
+## 确定性 RGB 评测（可选）
+
+`gym.make(..., deterministic_rendering=True)` 或
+`RobotSensor(..., deterministic_rendering=True)` 可开启当前 EGL 后端的
+确定性渲染模式。它关闭 MSAA 和 OpenGL dithering，并在相机切换后重新同步
+场景几何，避免无限地面的可视位置依赖上一台相机。物理时间步、接触、IK、
+奖励和连续 10 次成功确认均不改变。
+
+**默认关闭**，已有采集/训练画面不变。开启后边缘抗锯齿效果会变化，应对同一次
+对照的所有后端统一开启；不能将开启前后的策略成功率差异全部归因于物理后端。
+同种子不保证不同硬件/驱动上的逐像素一致，更不保证 CPU/Warp 接触轨迹逐位一致。
+
+Warp 批量环境还会冻结已结束的 world。冻结实现仅恢复对应 world 的积分器状态和
+观测缓存，不再对整个场景组额外执行 `forward`，因此某个 world 是否结束不会改变
+同组仍在运行 world 的观测相位。该隔离不表示不同 world 共享一套物理状态；它们
+仍是同一个 CUDA batch 中彼此独立的 world。
+
+验证：`MUJOCO_GL=egl PYOPENGL_PLATFORM=egl RUN_RENDER_TESTS=1 PYTHONPATH=src python -m unittest discover -s test -p test_deterministic_rendering.py`。

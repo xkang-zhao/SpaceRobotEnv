@@ -1,8 +1,5 @@
-evals
-lerobot_planner_teleop
-lerobot_robot_spaceur10emujoco
-lerobot_spacemouse
-lerobot_teleoperator_xbox
+data_collection
+envs
 mujoco_robot
-tasks
+planners
 utils

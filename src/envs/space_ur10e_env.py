@@ -1,19 +1,20 @@
 """Configurable Gymnasium environment for SpaceUR10e grasping tasks."""
 
 import os
+from typing import ClassVar
 
 import gymnasium as gym
-from gymnasium import spaces
 import mujoco
 import numpy as np
+from gymnasium import spaces
+
+from mujoco_robot.physics_backend import make_physics_backend
 
 # 复用现有机器人模块
 from mujoco_robot.robot_controller import RobotController
 from mujoco_robot.robot_ik import Kinematics
 from mujoco_robot.robot_sensor import RobotSensor
 from mujoco_robot.robot_viewer import RobotViewer
-from mujoco_robot.physics_backend import make_physics_backend
-
 
 DEFAULT_TARGET_INIT_RANGE = {
     "x": (1.5, 1.7),
@@ -31,7 +32,10 @@ DEFAULT_VIEWER_CONFIG = {
 class SpaceUR10eEnv(gym.Env):
     """可配置的 MuJoCo UR10e 空间机器人抓取环境。"""
 
-    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 20}
+    metadata: ClassVar = {
+        "render_modes": ["human", "rgb_array"],
+        "render_fps": 20,
+    }
 
     def __init__(
         self,
@@ -49,6 +53,7 @@ class SpaceUR10eEnv(gym.Env):
         warp_device="cuda:0",
         warp_nconmax=128,
         warp_njmax=512,
+        deterministic_rendering=False,
     ):
         super().__init__()
 
@@ -94,6 +99,7 @@ class SpaceUR10eEnv(gym.Env):
                 self.model,
                 self.data,
                 depth_rendering=use_depth,
+                deterministic_rendering=deterministic_rendering,
             )
         
         # Viewer 初始化 (仅在 human 模式下)

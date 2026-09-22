@@ -1,17 +1,58 @@
 
 import mujoco
-import cv2
 import numpy as np
 
+
+class _DeterministicRenderer(mujoco.Renderer):
+    """Opt-in repeatable RGB on the tested EGL backend, without MSAA/dither.
+
+    This changes antialiasing, not physics. It is not a guarantee of identical
+    pixels across different drivers or devices.
+    """
+
+    def __init__(self, model, **kwargs):
+        samples = model.vis.quality.offsamples
+        try:
+            model.vis.quality.offsamples = 0
+            super().__init__(model, **kwargs)
+        finally:
+            model.vis.quality.offsamples = samples
+
+    def render(self, *, out=None):
+        from OpenGL import GL
+
+        if self._gl_context:
+            self._gl_context.make_current()
+        dither = GL.glIsEnabled(GL.GL_DITHER)
+        GL.glDisable(GL.GL_DITHER)
+        try:
+            return super().render(out=out)
+        finally:
+            if dither:
+                GL.glEnable(GL.GL_DITHER)
+
+    def update_scene(self, data, camera=-1, scene_option=None):
+        # mjv_updateScene builds geoms before updating its camera. Infinite
+        # plane visual positions can therefore depend on the previous camera
+        # (observed on MuJoCo 3.12). Prime the camera then rebuild the scene;
+        # this does not advance physics or require an extra RGB render.
+        super().update_scene(data, camera=camera, scene_option=scene_option)
+        super().update_scene(data, camera=camera, scene_option=scene_option)
+
+
 class RobotSensor:
-    def __init__(self, model, data, depth_rendering=False):
+    def __init__(self, model, data, depth_rendering=False, *,
+                 deterministic_rendering=False):
         self.model = model
         self.data = data
 
-        self.renderer = mujoco.Renderer(self.model, width=640, height=480)
+        renderer_cls = (
+            _DeterministicRenderer if deterministic_rendering else mujoco.Renderer
+        )
+        self.renderer = renderer_cls(self.model, width=640, height=480)
 
         if depth_rendering == True:
-            self.depth_renderer = mujoco.Renderer(self.model, width=640, height=480)
+            self.depth_renderer = renderer_cls(self.model, width=640, height=480)
             self.depth_renderer.enable_depth_rendering()
         
         self.cameras_id: list[tuple[int, str]] = self.list_cameras()

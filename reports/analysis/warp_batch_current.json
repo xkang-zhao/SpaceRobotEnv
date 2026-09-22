@@ -1,0 +1,141 @@
+{
+  "workload": "Identical initial Cube state and fixed controls in every world; no IK or rendering in timing",
+  "seed": 7,
+  "control_steps": 96,
+  "substeps": 100,
+  "timestep": 0.0005,
+  "controls_sha256": "38034309b1a4cd1d56ebb273fc7ce17e482a7f4813a79f5c5fc976204dc95133",
+  "versions": {
+    "mujoco": "3.12.0",
+    "mujoco-warp": "3.12.0",
+    "warp-lang": "1.17.0",
+    "numpy": "2.4.6"
+  },
+  "platform": "Linux-5.15.0-60-generic-x86_64-with-glibc2.35",
+  "capacities_per_world": {
+    "nconmax": 128,
+    "njmax": 512
+  },
+  "results": [
+    {
+      "backend": "mujoco",
+      "nworld": 1,
+      "cpu_threads": 1,
+      "physics_seconds": 0.31752350833266973,
+      "physics_steps_per_second": 30233.98188817588,
+      "mean_control_physics_ms": 3.3075365451319763
+    },
+    {
+      "backend": "warp",
+      "nworld": 1,
+      "device": "NVIDIA A800 80GB PCIe",
+      "setup_seconds": 5.202814627904445,
+      "physics_steps_per_second": 1677.7270268079537,
+      "steps_per_second_including_transfers": 1669.96425467352,
+      "mean_batch_control_ms": 59.88152124821985,
+      "mean_phase_ms": {
+        "upload": 0.055497963330708444,
+        "physics": 59.604451977065764,
+        "readback": 0.2215713078233724
+      },
+      "process_gpu_memory_mib": 658.0,
+      "warp_pool_used_mib": 15.493497848510742,
+      "state_errors": {
+        "max_qpos_abs_error": 0.000901451310367618,
+        "max_qvel_abs_error": 0.034527557727810576,
+        "max_world_qpos_spread": 0.0,
+        "max_world_qvel_spread": 0.0
+      },
+      "state_within_tolerance": true,
+      "qpos_atol": 0.005,
+      "qvel_atol": 0.1,
+      "finite": true,
+      "overflow": false,
+      "physics_speedup_vs_one_cpu_core": 0.05549143453922922
+    },
+    {
+      "backend": "warp",
+      "nworld": 32,
+      "device": "NVIDIA A800 80GB PCIe",
+      "setup_seconds": 1.7005688231438398,
+      "physics_steps_per_second": 46259.384755507024,
+      "steps_per_second_including_transfers": 46078.64961063589,
+      "mean_batch_control_ms": 69.44647959608119,
+      "mean_phase_ms": {
+        "upload": 0.05684344796463847,
+        "physics": 69.17515260768899,
+        "readback": 0.2144835404275606
+      },
+      "process_gpu_memory_mib": 726.0,
+      "warp_pool_used_mib": 19.722525596618652,
+      "state_errors": {
+        "max_qpos_abs_error": 0.0009022559730720858,
+        "max_qvel_abs_error": 0.034609931346890166,
+        "max_world_qpos_spread": 5.97834587097168e-05,
+        "max_world_qvel_spread": 0.017545972019433975
+      },
+      "state_within_tolerance": true,
+      "qpos_atol": 0.005,
+      "qvel_atol": 0.1,
+      "finite": true,
+      "overflow": false,
+      "physics_speedup_vs_one_cpu_core": 1.5300460563416052
+    },
+    {
+      "backend": "warp",
+      "nworld": 128,
+      "device": "NVIDIA A800 80GB PCIe",
+      "setup_seconds": 1.8236693548969924,
+      "physics_steps_per_second": 157813.3649827955,
+      "steps_per_second_including_transfers": 157244.7015233137,
+      "mean_batch_control_ms": 81.40178890607785,
+      "mean_phase_ms": {
+        "upload": 0.06295802207508434,
+        "physics": 81.10846632916946,
+        "readback": 0.23036455483331034
+      },
+      "process_gpu_memory_mib": 986.0,
+      "warp_pool_used_mib": 32.81886959075928,
+      "state_errors": {
+        "max_qpos_abs_error": 0.0009019281475258212,
+        "max_qvel_abs_error": 0.05881713568984599,
+        "max_world_qpos_spread": 5.900859832763672e-05,
+        "max_world_qvel_spread": 0.05970687419176102
+      },
+      "state_within_tolerance": true,
+      "qpos_atol": 0.005,
+      "qvel_atol": 0.1,
+      "finite": true,
+      "overflow": false,
+      "physics_speedup_vs_one_cpu_core": 5.2197347199084705
+    },
+    {
+      "backend": "warp",
+      "nworld": 512,
+      "device": "NVIDIA A800 80GB PCIe",
+      "setup_seconds": 1.8871084433048964,
+      "physics_steps_per_second": 545552.9166970167,
+      "steps_per_second_including_transfers": 543638.4308474761,
+      "mean_batch_control_ms": 94.18024388044917,
+      "mean_phase_ms": {
+        "upload": 0.07860340216817956,
+        "physics": 93.8497411213272,
+        "readback": 0.2518993569537997
+      },
+      "process_gpu_memory_mib": 1946.0,
+      "warp_pool_used_mib": 85.20424556732178,
+      "state_errors": {
+        "max_qpos_abs_error": 0.0009021963684273104,
+        "max_qvel_abs_error": 0.03466953599166556,
+        "max_world_qpos_spread": 6.744265556335449e-05,
+        "max_world_qvel_spread": 0.031187312677502632
+      },
+      "state_within_tolerance": true,
+      "qpos_atol": 0.005,
+      "qvel_atol": 0.1,
+      "finite": true,
+      "overflow": false,
+      "physics_speedup_vs_one_cpu_core": 18.044362092787235
+    }
+  ]
+}
